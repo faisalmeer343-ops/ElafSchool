@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Elaf Lyceum Wazirpur Shigar - Smart Fee Management</title>
+    <title>Elaf Lyceum Wazirpur Shigar - Smart Fee Management | Classwise Reports</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -17,7 +17,6 @@
             background: linear-gradient(135deg, #e0e7ff 0%, #f3e8ff 100%);
             min-height: 100vh;
         }
-        /* School Header */
         .school-header {
             background: white;
             padding: 12px 0;
@@ -96,7 +95,6 @@
             font-weight: 700;
             font-size: 1.2rem;
         }
-        /* GREEN Fee slip style */
         .fee-slip {
             background: #fef9e6;
             border: 2px solid #2e7d32;
@@ -126,7 +124,6 @@
             font-size: 24px;
             font-weight: bold;
         }
-        /* Student fee slip title green color */
         .student-fee-title {
             color: #1f7a1f;
             font-weight: 800;
@@ -201,6 +198,13 @@
             margin-bottom: 6px;
             border-radius: 14px !important;
         }
+        .report-month-badge {
+            background: #e9ecef;
+            border-radius: 30px;
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
         @media print {
             body {
                 background: white;
@@ -211,6 +215,10 @@
             .fee-slip {
                 box-shadow: none;
                 border: 1px solid #aaa;
+            }
+            .report-container-print {
+                margin: 0;
+                padding: 10px;
             }
         }
     </style>
@@ -239,7 +247,7 @@
             <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#dashboard"><i class="fas fa-chart-line"></i> Dashboard</button></li>
             <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#students"><i class="fas fa-users"></i> Students</button></li>
             <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#feeSlipTab"><i class="fas fa-receipt"></i> Fee Slip</button></li>
-            <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#classReportTab"><i class="fas fa-chart-bar"></i> Class Reports</button></li>
+            <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#classReportTab"><i class="fas fa-chart-bar"></i> 📊 Monthly/Annual Reports</button></li>
             <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#backupTab"><i class="fas fa-database"></i> Backup</button></li>
         </ul>
 
@@ -250,9 +258,9 @@
                     <div class="col-md-3 mb-3"><div class="dashboard-card"><div class="dashboard-icon"><i class="fas fa-users fa-2x" style="color:#2e7d32;"></i></div><div class="dashboard-number fs-2 fw-bold" id="totalStudents">0</div><div>Total Students</div></div></div>
                     <div class="col-md-3 mb-3"><div class="dashboard-card"><div class="dashboard-icon"><i class="fas fa-money-bill-wave fa-2x" style="color:#f39c12;"></i></div><div class="dashboard-number fs-2 fw-bold" id="totalFees">Rs.0</div><div>Total Collected</div></div></div>
                     <div class="col-md-3 mb-3"><div class="dashboard-card"><div class="dashboard-icon"><i class="fas fa-exclamation-triangle fa-2x"></i></div><div class="dashboard-number fs-2 fw-bold" id="totalDues">Rs.0</div><div>Total Dues</div></div></div>
-                    <div class="col-md-3 mb-3"><div class="dashboard-card"><div class="dashboard-icon"><i class="fas fa-chalkboard-user fa-2x"></i></div><div class="dashboard-number fs-2 fw-bold" id="totalExamFees">Rs.0</div><div>Exam Fees</div></div></div>
+                    <div class="col-md-3 mb-3"><div class="dashboard-card"><div class="dashboard-icon"><i class="fas fa-chart-simple fa-2x"></i></div><div class="dashboard-number fs-2 fw-bold" id="totalExamFees">Rs.0</div><div>Exam Fees Collected</div></div></div>
                 </div>
-                <div class="card-custom"><h5><i class="fas fa-history"></i> Recent Transactions</h5><hr><div class="table-responsive"><table class="table table-bordered"><thead><tr><th>Date</th><th>Student</th><th>Class</th><th>Amount</th></tr></thead><tbody id="recentPaymentsList"></tbody></table></div></div>
+                <div class="card-custom"><h5><i class="fas fa-history"></i> Recent Payments</h5><hr><div class="table-responsive"><table class="table table-bordered"><thead><tr><th>Date</th><th>Student</th><th>Class</th><th>Month</th><th>Amount</th></tr></thead><tbody id="recentPaymentsList"></tbody></table></div></div>
             </div>
 
             <!-- STUDENTS MANAGEMENT -->
@@ -264,7 +272,7 @@
                     <div class="col-md-2"><label>Monthly Fee (Rs.)*</label><input type="number" class="form-control" id="monthlyFee" required></div>
                     <div class="col-md-2"><label>Phone (WhatsApp)</label><input type="text" class="form-control" id="studentPhone"></div></div>
                     <button type="submit" class="btn btn-custom mt-3"><i class="fas fa-save"></i> Add Student</button>
-                    <button type="button" class="btn btn-success-custom mt-3 ms-2" onclick="exportToCSV()"><i class="fas fa-download"></i> Export CSV</button>
+                    <button type="button" class="btn btn-success-custom mt-3 ms-2 btn-custom" onclick="exportToCSV()"><i class="fas fa-download"></i> Export CSV</button>
                 </form></div>
                 <div class="card-custom"><div class="card-header-custom"><i class="fas fa-table-list"></i> All Students</div><div class="table-responsive"><table class="table table-bordered table-hover"><thead><tr><th>ID</th><th>Name</th><th>Father</th><th>Class</th><th>Monthly Fee</th><th>Phone</th><th>Paid</th><th>Dues</th><th>Action</th></tr></thead><tbody id="studentsTableBody"></tbody></table></div></div>
             </div>
@@ -290,13 +298,41 @@
                 </div>
             </div>
 
-            <!-- CLASS REPORTS (separate accounts class wise) -->
+            <!-- CLASS REPORTS: MONTHLY & ANNUAL (Classwise & Whole School) -->
             <div class="tab-pane fade" id="classReportTab">
-                <div class="card-custom"><div class="card-header-custom"><i class="fas fa-chart-pie"></i> Class Wise Financial Summary (Separate Accounts)</div>
-                <select id="classReportFilter" class="form-select w-auto mb-3"><option value="">-- Whole School --</option><option>Playgroup</option><option>Nursery</option><option>Prep</option><option>1st</option><option>2nd</option><option>3rd</option><option>4th</option><option>5th</option><option>6th</option><option>7th</option><option>8th</option><option>9th</option><option>10th</option></select>
-                <button class="btn btn-custom me-2" onclick="generateClassWiseReport()"><i class="fas fa-chart-line"></i> Generate Report</button>
-                <button class="btn btn-success-custom" onclick="printClassReportFn()"><i class="fas fa-print"></i> Print</button>
-                <div id="classReportContainer" class="mt-4"></div></div>
+                <div class="card-custom">
+                    <div class="card-header-custom"><i class="fas fa-chart-pie"></i> 📅 Monthly & Annual Reports (Class Wise / Whole School)</div>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-3">
+                            <label>Report Type</label>
+                            <select id="reportTypeSelect" class="form-select">
+                                <option value="monthly">📆 Monthly Report</option>
+                                <option value="annual">📊 Annual Summary Report</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3" id="monthYearDiv">
+                            <label>Select Month</label>
+                            <input type="month" id="reportMonth" class="form-control" value="2026-02">
+                        </div>
+                        <div class="col-md-3" id="annualYearDiv" style="display:none;">
+                            <label>Select Year</label>
+                            <select id="reportYear" class="form-select"><option>2025</option><option>2026</option><option>2027</option></select>
+                        </div>
+                        <div class="col-md-3">
+                            <label>Class Filter</label>
+                            <select id="classReportFilter" class="form-select">
+                                <option value="">-- All Classes (Whole School) --</option>
+                                <option>Playgroup</option><option>Nursery</option><option>Prep</option><option>1st</option><option>2nd</option><option>3rd</option><option>4th</option><option>5th</option><option>6th</option><option>7th</option><option>8th</option><option>9th</option><option>10th</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-2 mb-3 flex-wrap">
+                        <button class="btn btn-custom" onclick="generateDynamicReport()"><i class="fas fa-chart-line"></i> Generate Report</button>
+                        <button class="btn btn-success" onclick="printReportSection()"><i class="fas fa-print"></i> Print Report</button>
+                        <button class="btn btn-outline-success" onclick="exportReportToCSV()"><i class="fas fa-file-csv"></i> Export CSV</button>
+                    </div>
+                    <div id="classReportContainer" class="mt-3" style="overflow-x:auto;"></div>
+                </div>
             </div>
 
             <!-- BACKUP TAB -->
@@ -304,8 +340,8 @@
                 <div class="card-custom"><div class="card-header-custom"><i class="fas fa-database"></i> Backup & Restore</div>
                 <button class="btn btn-custom mb-3" onclick="downloadBackupData()"><i class="fas fa-download"></i> Download Backup (JSON)</button>
                 <input type="file" id="restoreFile" class="form-control mb-2" accept=".json">
-                <button class="btn btn-success-custom" onclick="restoreBackupData()"><i class="fas fa-upload"></i> Restore Backup</button>
-                <hr><p>Total Students: <span id="backupStatStudents">0</span> | Payments: <span id="backupStatPayments">0</span></p>
+                <button class="btn btn-custom" onclick="restoreBackupData()"><i class="fas fa-upload"></i> Restore Backup</button>
+                <hr><p>Total Students: <span id="backupStatStudents">0</span> | Payments Recorded: <span id="backupStatPayments">0</span></p>
                 </div>
             </div>
         </div>
@@ -318,16 +354,18 @@
     let students = JSON.parse(localStorage.getItem('elaf_students')) || [];
     let payments = JSON.parse(localStorage.getItem('elaf_payments')) || [];
 
-    // demo init
+    // Demo init
     if(students.length === 0){
         students = [
             { id: "STU001", name: "Ali Raza", fatherName: "Ahmed Khan", class: "5th", monthlyFee: 2500, phone: "03123456789", totalPaid: 2500, dues: 0 },
             { id: "STU002", name: "Fatima Zahra", fatherName: "Hassan Ali", class: "8th", monthlyFee: 3000, phone: "03215577608", totalPaid: 3000, dues: 0 },
-            { id: "STU003", name: "Hamza Akhtar", fatherName: "Akhtar Hussain", class: "3rd", monthlyFee: 2200, phone: "03451234567", totalPaid: 0, dues: 2200 }
+            { id: "STU003", name: "Hamza Akhtar", fatherName: "Akhtar Hussain", class: "3rd", monthlyFee: 2200, phone: "03451234567", totalPaid: 0, dues: 2200 },
+            { id: "STU004", name: "Sara Batool", fatherName: "Raza Abbas", class: "5th", monthlyFee: 2500, phone: "03331234567", totalPaid: 2500, dues: 0 }
         ];
         payments = [
-            { id: "PAY01", studentId: "STU001", studentName: "Ali Raza", className: "5th", date: "2026-02-10", monthlyFee: 2500, dues: 0, examFee: 400, total: 2900, receivedBy: "Admin" },
-            { id: "PAY02", studentId: "STU002", studentName: "Fatima Zahra", className: "8th", date: "2026-02-05", monthlyFee: 3000, dues: 0, examFee: 500, total: 3500, receivedBy: "Admin" }
+            { id: "PAY01", studentId: "STU001", studentName: "Ali Raza", className: "5th", date: "2026-02-10", month: "2026-02", monthlyFee: 2500, dues: 0, examFee: 400, total: 2900, receivedBy: "Admin" },
+            { id: "PAY02", studentId: "STU002", studentName: "Fatima Zahra", className: "8th", date: "2026-02-05", month: "2026-02", monthlyFee: 3000, dues: 0, examFee: 500, total: 3500, receivedBy: "Admin" },
+            { id: "PAY03", studentId: "STU004", studentName: "Sara Batool", className: "5th", date: "2026-01-15", month: "2026-01", monthlyFee: 2500, dues: 0, examFee: 400, total: 2900, receivedBy: "Admin" }
         ];
         syncAllData();
     }
@@ -345,8 +383,8 @@
         document.getElementById('totalFees').innerText = "Rs."+totalCollected.toLocaleString();
         document.getElementById('totalDues').innerText = "Rs."+totalDue.toLocaleString();
         document.getElementById('totalExamFees').innerText = "Rs."+totalExam.toLocaleString();
-        let recentHtml = payments.slice(-5).reverse().map(p=>`<tr><td>${p.date}</td><td>${p.studentName}</td><td>${p.className}</td><td>Rs.${p.total.toLocaleString()}</td></tr>`).join('');
-        document.getElementById('recentPaymentsList').innerHTML = recentHtml || "<tr><td colspan='4'>No payments</td></tr>";
+        let recentHtml = payments.slice(-5).reverse().map(p=>`<tr><td>${p.date}</td><td>${p.studentName}</td><td>${p.className}</td><td>${p.month || p.date.slice(0,7)}</td><td>Rs.${p.total.toLocaleString()}</td></tr>`).join('');
+        document.getElementById('recentPaymentsList').innerHTML = recentHtml || "<tr><td colspan='5'>No payments</td></tr>";
     }
     function renderStudentsTable(){
         let html='';
@@ -377,7 +415,7 @@
         alert(`Student ${newStudent.name} added! ID: ${newId}`);
     });
 
-    // ========== CLASS WISE SEARCH + FEE SLIP WITH GREEN TITLE & WHATSAPP ==========
+    // ----- Fee Slip Methods -----
     function filterStudentsByClass(){
         let selectedClass = document.getElementById('classWiseFilter').value;
         let searchTerm = document.getElementById('searchStudentByName').value.toLowerCase();
@@ -405,21 +443,20 @@
             <div class="fee-slip-header">
                 <div class="fee-slip-logo">EL</div>
                 <h3>Elaf Lyceum Wazirpur Shigar</h3>
-                <!-- Green Colored "Student Fee Slip" text exactly as required -->
                 <div class="student-fee-title">Student Fee Slip</div>
                 <small>Success with Wisdom! | Wazirpur Shigar</small>
             </div>
-            <div class="fee-slip-row"><span class="label">Date:</span><span>${todayDate}</span></div>
-            <div class="fee-slip-row"><span class="label">Student ID:</span><span>${student.id}</span></div>
-            <div class="fee-slip-row"><span class="label">Name:</span><span>${student.name}</span></div>
-            <div class="fee-slip-row"><span class="label">Father Name:</span><span>${student.fatherName}</span></div>
-            <div class="fee-slip-row"><span class="label">Class:</span><span>${student.class}</span></div>
-            <div class="fee-slip-row"><span class="label">For Month:</span><input type="month" id="slipMonth" class="form-control form-control-sm" style="width:140px;"></div>
-            <div class="fee-slip-row"><span class="label">Monthly Fee (Rs):</span><input type="number" id="slipMonthly" class="form-control form-control-sm" style="width:120px;" value="${student.monthlyFee}"></div>
-            <div class="fee-slip-row"><span class="label">Previous Dues:</span><input type="number" id="slipDues" class="form-control form-control-sm" value="${student.dues || 0}" style="width:120px;"></div>
-            <div class="fee-slip-row"><span class="label">Exam Fee:</span><input type="number" id="slipExam" class="form-control form-control-sm" value="500" style="width:120px;"></div>
-            <div class="fee-slip-row fee-slip-total"><span class="label">GRAND TOTAL:</span><span id="totalPreviewSpan">Rs. 0</span></div>
-            <div class="fee-slip-row"><span class="label">Received By:</span><input type="text" id="receiverName" class="form-control form-control-sm" placeholder="Cashier/Signature"></div>
+            <div class="fee-slip-row"><span>Date:</span><span>${todayDate}</span></div>
+            <div class="fee-slip-row"><span>Student ID:</span><span>${student.id}</span></div>
+            <div class="fee-slip-row"><span>Name:</span><span>${student.name}</span></div>
+            <div class="fee-slip-row"><span>Father Name:</span><span>${student.fatherName}</span></div>
+            <div class="fee-slip-row"><span>Class:</span><span>${student.class}</span></div>
+            <div class="fee-slip-row"><span>For Month:</span><input type="month" id="slipMonth" class="form-control form-control-sm" style="width:140px;"></div>
+            <div class="fee-slip-row"><span>Monthly Fee (Rs):</span><input type="number" id="slipMonthly" class="form-control form-control-sm" style="width:120px;" value="${student.monthlyFee}"></div>
+            <div class="fee-slip-row"><span>Previous Dues:</span><input type="number" id="slipDues" class="form-control form-control-sm" value="${student.dues || 0}" style="width:120px;"></div>
+            <div class="fee-slip-row"><span>Exam Fee:</span><input type="number" id="slipExam" class="form-control form-control-sm" value="500" style="width:120px;"></div>
+            <div class="fee-slip-row fee-slip-total"><span>GRAND TOTAL:</span><span id="totalPreviewSpan">Rs. 0</span></div>
+            <div class="fee-slip-row"><span>Received By:</span><input type="text" id="receiverName" class="form-control form-control-sm" placeholder="Cashier"></div>
             <div class="bank-details"><i class="fas fa-mobile-alt"></i> Easypesa: 03215577608 &nbsp;|&nbsp; <i class="fas fa-university"></i> Soneri Bank: 20016698537</div>
             <div class="mt-3 text-center no-print d-flex gap-2 justify-content-center flex-wrap">
                 <button class="btn btn-custom" onclick="confirmPayment('${student.id}')"><i class="fas fa-check-circle"></i> Confirm Payment</button>
@@ -485,7 +522,6 @@
         location.reload();
     }
 
-    // WhatsApp share feature (sends fee summary)
     function sendWhatsAppFeeSlip(studentId){
         let student = students.find(s=>s.id === studentId);
         if(!student) return;
@@ -494,43 +530,108 @@
         let examAmt = document.getElementById('slipExam')?.value || 500;
         let total = parseFloat(monthly) + parseFloat(duesAmt) + parseFloat(examAmt);
         let monthTxt = document.getElementById('slipMonth')?.value || "Current Month";
-        let message = `🏫 *Elaf Lyceum Wazirpur Shigar* 🏫\n🎓 *Fee Slip* 🎓\n\n👤 Student: ${student.name} (${student.id})\n📚 Class: ${student.class}\n📅 Month: ${monthTxt}\n💰 Monthly Fee: Rs.${monthly}\n⚠️ Dues: Rs.${duesAmt}\n📖 Exam Fee: Rs.${examAmt}\n💵 *Total Due: Rs.${total}*\n📞 Easypesa: 03215577608\n🏦 Bank: Soneri Bank A/C 20016698537\n\nThank you!`;
+        let message = `🏫 Elaf Lyceum Wazirpur Shigar 🏫\n🎓 Fee Slip 🎓\n👤 ${student.name} (${student.id})\n📚 Class: ${student.class}\n📅 Month: ${monthTxt}\n💰 Monthly: Rs.${monthly}\n⚠️ Dues: Rs.${duesAmt}\n📖 Exam: Rs.${examAmt}\n💵 Total: Rs.${total}\n📞 Easypesa: 03215577608\n🏦 Bank: Soneri 20016698537`;
         let encodedMsg = encodeURIComponent(message);
         let phoneNumber = student.phone ? student.phone.trim() : "";
-        if(phoneNumber){
-            window.open(`https://wa.me/${phoneNumber}?text=${encodedMsg}`, '_blank');
+        if(phoneNumber) window.open(`https://wa.me/${phoneNumber}?text=${encodedMsg}`, '_blank');
+        else window.open(`https://wa.me/?text=${encodedMsg}`, '_blank');
+    }
+
+    // ************ MONTHLY & ANNUAL CLASS WISE REPORTS ************
+    function generateDynamicReport(){
+        let reportType = document.getElementById('reportTypeSelect').value;
+        let classFilter = document.getElementById('classReportFilter').value;
+        if(reportType === 'monthly'){
+            let monthVal = document.getElementById('reportMonth').value;
+            if(!monthVal) { alert("Select month"); return; }
+            generateMonthlyReport(monthVal, classFilter);
         } else {
-            window.open(`https://wa.me/?text=${encodedMsg}`, '_blank');
-            alert("Student phone not set. Opening WhatsApp with message only.");
+            let yearVal = document.getElementById('reportYear').value;
+            if(!yearVal) { alert("Select year"); return; }
+            generateAnnualReport(yearVal, classFilter);
         }
     }
 
-    // CLASS WISE REPORT (Separate accounts per class)
-    function generateClassWiseReport(){
-        let selectedClass = document.getElementById('classReportFilter').value;
-        let filteredStudents = selectedClass ? students.filter(s=>s.class === selectedClass) : students;
-        let filteredPayments = selectedClass ? payments.filter(p=>p.className === selectedClass) : payments;
-        let totalCollected = filteredPayments.reduce((sum,p)=> sum + p.total,0);
-        let totalExpected = filteredStudents.reduce((sum,s)=> sum + s.monthlyFee,0);
-        let totalDueNow = filteredStudents.reduce((sum,s)=> sum + (s.dues || 0),0);
-        let rows = filteredStudents.map(s=>{
-            let studentPaid = filteredPayments.filter(p=>p.studentId===s.id).reduce((acc,pm)=>acc+pm.monthlyFee,0);
-            return `<tr><td>${s.id}</td><td>${s.name}</td><td>${s.class}</td><td>Rs.${s.monthlyFee}</td><td>Rs.${studentPaid}</td><td>Rs.${(s.monthlyFee - studentPaid)}</td></tr>`;
+    function generateMonthlyReport(monthStr, classFilter){
+        let filteredPayments = payments.filter(p => p.month === monthStr);
+        if(classFilter) filteredPayments = filteredPayments.filter(p => p.className === classFilter);
+        let relevantStudents = students.filter(s => (classFilter ? s.class === classFilter : true));
+        let studentPaymentMap = new Map();
+        filteredPayments.forEach(p => { studentPaymentMap.set(p.studentId, (studentPaymentMap.get(p.studentId) || 0) + p.total); });
+        let rows = relevantStudents.map(s => {
+            let paidThisMonth = studentPaymentMap.get(s.id) || 0;
+            let expected = s.monthlyFee;
+            let balance = expected - paidThisMonth;
+            return `<tr><td>${s.id}</td><td>${s.name}</td><td>${s.class}</td><td>Rs.${expected}</td><td>Rs.${paidThisMonth}</td><td class="${balance>0?'text-danger':'text-success'}">Rs.${balance}</td></tr>`;
         }).join('');
-        let html = `<div id="classPrintSection"><div style="text-align:center"><h3>Elaf Lyceum Wazirpur Shigar</h3><h4>${selectedClass ? selectedClass + ' - Class Account' : 'Whole School Financial Report'}</h4><p>Generated: ${new Date().toLocaleString()}</p></div>
-        <table class="table table-bordered"><thead><tr><th>ID</th><th>Student</th><th>Class</th><th>Monthly Fee</th><th>Total Paid</th><th>Balance</th></tr></thead><tbody>${rows || '<tr><td colspan="6">No records</td></tr>'}</tbody></table>
-        <div class="alert alert-success mt-3"><strong>Summary for ${selectedClass || 'All Classes'}</strong><br>Total Students: ${filteredStudents.length}<br>Total Expected Monthly: Rs.${totalExpected.toLocaleString()}<br>Total Collected: Rs.${totalCollected.toLocaleString()}<br>Total Outstanding: Rs.${totalDueNow.toLocaleString()}</div></div>`;
+        let totalExpected = relevantStudents.reduce((sum,s)=>sum+s.monthlyFee,0);
+        let totalCollected = filteredPayments.reduce((sum,p)=>sum+p.total,0);
+        let title = `${classFilter ? classFilter + ' Class' : 'Whole School'} Monthly Report - ${monthStr}`;
+        let html = `<div id="printableReportDiv"><div style="text-align:center"><h3>Elaf Lyceum Wazirpur Shigar</h3><h4>${title}</h4><p>Generated: ${new Date().toLocaleString()}</p></div>
+        <table class="table table-bordered"><thead><tr><th>ID</th><th>Student</th><th>Class</th><th>Monthly Fee</th><th>Paid (${monthStr})</th><th>Balance</th></tr></thead><tbody>${rows || '<tr><td colspan="6">No data</td></tr>'}</tbody></table>
+        <div class="alert alert-info mt-3"><strong>Summary:</strong> Total Expected: Rs.${totalExpected.toLocaleString()} | Total Collected: Rs.${totalCollected.toLocaleString()} | Outstanding: Rs.${(totalExpected-totalCollected).toLocaleString()}</div></div>`;
         document.getElementById('classReportContainer').innerHTML = html;
     }
-    function printClassReportFn(){
-        let content = document.getElementById('classPrintSection');
-        if(!content) { alert("Generate report first"); return; }
+
+    function generateAnnualReport(year, classFilter){
+        let filteredPayments = payments.filter(p => p.date && p.date.startsWith(year));
+        if(classFilter) filteredPayments = filteredPayments.filter(p => p.className === classFilter);
+        let relevantStudents = students.filter(s => (classFilter ? s.class === classFilter : true));
+        let monthlyAggregate = {};
+        for(let i=1;i<=12;i++) monthlyAggregate[i] = 0;
+        filteredPayments.forEach(p => {
+            let monthNum = parseInt(p.month.split('-')[1]);
+            if(monthNum) monthlyAggregate[monthNum] += p.total;
+        });
+        let monthlyRows = '';
+        let totalYearlyCollected = 0;
+        for(let m=1;m<=12;m++){
+            let monthName = new Date(year, m-1, 1).toLocaleString('default', { month: 'long' });
+            let collected = monthlyAggregate[m];
+            totalYearlyCollected += collected;
+            monthlyRows += `<tr><td>${monthName}</td><td>Rs.${collected.toLocaleString()}</td></tr>`;
+        }
+        let totalExpectedYear = relevantStudents.reduce((sum,s)=>sum + (s.monthlyFee * 12), 0);
+        let title = `${classFilter ? classFilter + ' Class' : 'Whole School'} Annual Report ${year}`;
+        let html = `<div id="printableReportDiv"><div style="text-align:center"><h3>Elaf Lyceum Wazirpur Shigar</h3><h4>${title}</h4><p>Annual Fee Collection Summary</p></div>
+        <table class="table table-bordered"><thead><tr><th>Month</th><th>Total Collected (Rs.)</th></tr></thead><tbody>${monthlyRows}</tbody></table>
+        <div class="alert alert-success mt-3"><strong>Annual Summary:</strong> Total Yearly Collection: Rs.${totalYearlyCollected.toLocaleString()} | Projected Annual Fee (All Students × 12): Rs.${totalExpectedYear.toLocaleString()} | Collection Rate: ${Math.round((totalYearlyCollected/totalExpectedYear)*100)}%</div></div>`;
+        document.getElementById('classReportContainer').innerHTML = html;
+    }
+
+    function printReportSection(){
+        let content = document.getElementById('printableReportDiv');
+        if(!content || content.innerHTML.trim()==="") { alert("Generate report first"); return; }
         let win = window.open('','_blank');
-        win.document.write(`<html><head><title>Class Report</title><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"></head><body>${content.innerHTML}</body></html>`);
+        win.document.write(`<html><head><title>Fee Report</title><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"></head><body>${content.outerHTML}</body></html>`);
         win.document.close(); win.print();
     }
 
-    // Backup functions
+    function exportReportToCSV(){
+        let table = document.querySelector('#classReportContainer table');
+        if(!table){ alert("Generate report first"); return; }
+        let csv = [];
+        let rows = table.querySelectorAll('tr');
+        rows.forEach(row => {
+            let cols = row.querySelectorAll('td,th');
+            let rowData = Array.from(cols).map(cell => cell.innerText.trim()).join(',');
+            csv.push(rowData);
+        });
+        let blob = new Blob([csv.join('\n')], {type:"text/csv"});
+        let a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = `fee_report_${Date.now()}.csv`;
+        a.click();
+    }
+
+    // Toggle month/year visibility
+    document.getElementById('reportTypeSelect').addEventListener('change', function(){
+        let isMonthly = this.value === 'monthly';
+        document.getElementById('monthYearDiv').style.display = isMonthly ? 'block' : 'none';
+        document.getElementById('annualYearDiv').style.display = isMonthly ? 'none' : 'block';
+    });
+    
+    // Backup
     function downloadBackupData(){
         let backup = { students, payments, exportedAt: new Date().toISOString() };
         let data = JSON.stringify(backup,null,2);
@@ -539,7 +640,6 @@
         a.href = URL.createObjectURL(blob);
         a.download = `elaf_fee_backup_${new Date().toISOString().slice(0,10)}.json`;
         a.click();
-        URL.revokeObjectURL(a.href);
     }
     function restoreBackupData(){
         let file = document.getElementById('restoreFile').files[0];
@@ -549,8 +649,7 @@
             try{
                 let data = JSON.parse(e.target.result);
                 if(data.students && data.payments){
-                    students = data.students;
-                    payments = data.payments;
+                    students = data.students; payments = data.payments;
                     syncAllData();
                     alert("Restore successful!");
                     location.reload();
@@ -576,6 +675,7 @@
     window.onload = ()=>{
         renderAll();
         filterStudentsByClass();
+        document.getElementById('reportTypeSelect').dispatchEvent(new Event('change'));
     };
 </script>
 </body>
